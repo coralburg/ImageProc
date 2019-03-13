@@ -1,4 +1,4 @@
-# ImageProc
+# ImageProc By Coral Burg
 import xml.etree.ElementTree as ET
 from PIL import Image
 import matplotlib
