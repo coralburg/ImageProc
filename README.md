@@ -15,7 +15,7 @@ dataset of handwritten Hebrew script.
 Input is a color image of handwritten filled form.
 
 For example:
-[!Handwritten filled form](https://github.com/coralburg/ImageProc/blob/master/Example_input.jpg)
+![Handwritten filled form](https://github.com/coralburg/ImageProc/blob/master/Example_input.jpg)
 
 ## Outputs
 There are 2 different outputs. They are cropped text lines, cropped words and cropped characters. All
