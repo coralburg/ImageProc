@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
+
 from PIL import Image
-import matplotlib
 import numpy as np
 import math
 from numpy import linalg
@@ -52,6 +52,19 @@ rectangle_side = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                   [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
+term_A = ['איך נטוס עם גד כץ, הזקן שמחלף בצרפת?', 'עטלף אבק נס דרך מזגן שהתפוצץ כי חם.', 'מנעולן הפך כף חצץ שגזר קט איבד סתם.', 'גנב שהעז אכל חינם צדף קר וטס', 'חסכן קל דעת בארץ פשוט הגזים', 'פריחת נטע שסק בצד ואגוז המלך', 'איך נטוס עם גד כץ, הזקן שמחלף בצרפת?', 'עטלף אבק נס דרך מזגן שהתפוצץ כי חם', 'מנעולן הפך כף חצץ שגזר קט איבד סתם.', 'לביא טרף גמד זקן שחסך הצעות', 'קטנטן צפצף כפכף שומן קוץ חפץ תם צץ רך']
+term_B = ['איך בלש תפס גמד רוצח עז קטנה.', 'שפן בלי כף אכל קצת גזר בטעם חסה, ודי.', 'השפן טעם ביס ואכל קצת גזר חד.', 'קזחסטן ארץ מעלפת, גדושה בכי.', 'פז, שרת קמצן, בוגד החליט: אכעס עליך', 'תמר אכלה גז פוק, בעץ טניס חדש.', 'ממבל קנטרן שזעף פצץ אגד וכך הסתים.', 'החזיר רץ, מצא כספת ובלע דג קטן', 'חסכן קל דעת בארץ פשוט הגזים', 'צפע חזק נשך דג מת באוסטרליה', 'קטנטן צפצף כפכף שומן קוץ חפץ תם צץ רך']
+term_C = ['נחש צפע קט בהזיות, דאג מסל רך.', 'כפיל שקט נסע בגדה, צרח ואז מת מהתקף', 'איש עם זקן טס לצרפת ודג בחכה.', 'פגז מחק את העצל שבכורדיסטן.', 'הקצין גד חזר ותבע כיסא למשפט.', 'חלזון גֹרש כי התעסק בצדף טמא.', 'עצבת-חטא סרק, יזום כנגד פשלה.', 'לביא טרף גמד זקן תמים שחסך הצעות.', 'הצדק פגש את טמבל נוסע כחזיר.', 'גנב שהעז אכל חינם צדף קר וטס.', 'קטנטן צפצף כפכף בוץ קוץ חפץ תמים לך רך']
+term_D = ['איש מצטדק פגע בזונה חסרת כל.', 'זקן גס ליטף את הכרוב עד שצמח.', 'זקן, אך גס-רוח בדם, יעץ להתפשט.', 'חסכן קל דעת בארץ פשוט הגזים.', 'הזר שטיגן תפוד בכלא צעק חמס.', 'אין חזך רופס למעט קצת גב השד.', 'פריחת נטע שסק בצד אגוז המלך.', 'אני זוכרת שטל ספק בגדה עם צח.', 'גמד קנטרן שזעף פצץ אגד וכך הסתים.', 'סכנה! זאב גדול עצל קפץ דרך מטף מים חם.', 'קטנטן צפצף כפכף בוץ קוץ חפץ תמים לך רך']
+term_E = ['כהרף־עין נשבט לך גוץ חוצפן. תפוס חזק!', 'הרכז צמא, ניסח: בלעת קטשופ, דג.', 'גד פושטק! תעלב? חסין אומץ זכרה.', 'אגדוש, הכן טבח צרפתי! מעז, קלס.', 'סלק זעם! יתפרץ, חבט נכה. שוד גא.', 'לכסות טיפש המצע יחזק. דג נברא.', 'ארב נגד, קזחי עָצמה שפט. תוסכל.', 'גוף סבל, זעקתם: הכחיד ארץ שטן!', 'נטש צר? אדיח. כה מתק עוז – לב ספוג.', 'מנעולן הפך כף חצץ שגזר קט איבד סתם.', 'מקומם צפוף כיף בוץ קוץ חפץ תמים לך רך']
+term_F = ['בעמק יפה בין כרמים ושדות', 'עומד מגדל בן חמש קומות . ומי גר במגדל?', 'בקומה הראשונה תרנגולת שמנה,', 'כל היום בביתה על משכבה מתהפכת.', 'היא כל-כך שמנה שקשה לה ללכת.', 'בקומה השנייה גרה קוקייה, כל היום היא מהלכת.', 'עושה ביקורים ,כי בניה גרים בקינים אחרים.', 'בקומה השלישית חתולה כושית נקייה, מגונדרת. על צוואר יש לה סרט.', 'בקומה הרביעית גרה סנאית.', 'בשמחה ונחת אגוזים מפצחת.', 'ובקומה החמישית גר מר עכבר.']
+term_G = ['אך לפני שבוע ארז חפציו ונסע', 'איש אינו יודע לאן ומדוע.', 'כתבו דיירי המגדל שלט, תקעו מסמר מעל לדלת', 'וקבעו שלט בקיר: דירה להשכיר', 'והנה בשבילים ,בדרכים, בכבישים.', 'אל הבית באים דיירים חדשים.', 'ראשונה באה נמלה, לקומה חמישית עולה, קורא את השלט,', 'פותחת את הדלת, עומדת בפנים ומסתכלת.', 'באים מכל הדירות השכנים, עומדים מסביב, מסבירים לה פנים', 'הנאים החדרים בעיניך?', 'אומרת הנמלה: השכנים אינם טובים בעיני.']
+term_H = ['איך אשב פה, אם לעשרים ארנבות, עם קוקייה מפקירה הבנים', 'כל בניה גדלו בקינים זרים, כולם עזובים, כולם מופקרים', 'הלכה הארנבת בא החזיר,', 'אחרי שקרא את השלט, התגלגל ועלה ופתח את הדלת', 'עומד ומביט העניו הקטנות בכתלים, בתקרה ובחתונות.', 'באים מכל הדירות השכנים, עומדים סביבו, ומסבירים לו פנים', 'בא זמיר. שר הזמיר בקול רינה, עולה הזמיר לקומה אחרונה.', 'עולה קול פיצוחם עד לב השמיים, איום ונורא, מחריש אוזניים', 'ואזני רגילות לקולות אחרים, רק לשירים ולמזמורים.', 'באה יונה. חיש קל עלתה לקומה אחרונה', 'שכרה היונה את הדירה, יום- יום הומה היא בחדרה.']
+term_I = ['פעם אחת , לפני הרבה שנים, חי מלך שאהב מאוד בגדים יפים', 'ארון הבגדים שלו היה כה חשוב בעיניו , שהיו לו יותר חייטים מחיילים', 'בכל יום היה עורך טכס חגיגי ,', 'רק כדי להתפאר בבגדיו המגונדרים', 'ולכל שעה משעות היום היה לו בגד מיוחד', 'האנשים בממלכה נאלצו ללכת לטקסים כה רבים', 'שלא נשאר להם זמן לעבוד', 'אבל המלך לא הבין איזה נזק הוא גורם לממלכה', 'הוא המשיך לצעוד ברחובות ולהתפאר', 'בירת הממלכה הייתה גדולה ויפה', 'תיירים באו מרחוק כדי להתפעל ממנה']
+term_J = ['והמלך ניצל זאת כדי לערוך עוד ועוד טכסים ומסיבות', 'החיטים שלו נאלצו לעבוד מסביב לשעון', 'כדי לעמוד בדרישותיו למחלצות חדשות', 'חדר ההלבשה של המלך היה ענקי , כמו אולם ריקודים', 'כל בוקר התבונן המלך בשפע הגלימות', 'כל בוקר התבונן המלך בשפע הגלימות', 'משרתיו המתינו בדאגה מחוץ לדלת , עד שיחליט', 'יום אחד הופיעו בעיר שני זרים', 'שועל בשם "מחט" , וקוף שקרא לעצמו "חוט', 'הם התיימרו להיות חיטים מומחים מארץ רחוקה', 'אשר באו לארג למלך מערכת בגדים , שאין יפה ממנה בעולם כולו.']
+term_K = ['למעשה , הם היו רמאים ונוכלים', 'כשהגיעו לארמון, השתחוו חוט ומחט לפני המלך ואמרו', 'הוד מלכותך , הבד שלנו לא רק מקסים ונהדר', 'יש לו גם תכונה מופלאה: טיפשים לא יוכלו לראותו.', 'מצוין! חשב המלך , שילוב של יופי וחוכמה.', 'ומיד ציווה על החיטים להתחיל במלכה.', 'לאחר שקיבלו המון כסף כדי לקנות חומרים', 'התיישבו חוט ומחט מול הנול והעמידו פנים שהם אורגים.', 'חוטי הכסף והזהב שהם הזמינו היו מוסתרים בחדרם.', 'אבל רחש הנול הריק שלהם נשמע בארמון עד מאוחר בלילה.', 'כולם התרשמו מחריצותם הרבה.']
+term_L = ['המלך התפוצץ מסקרנות בקשר לבגדיו החדשים.', 'לבסוף שלח את יועצו הבכיר ביותר', 'לראות איך מתקדמת העבודה.', 'היועץ המסכן נדהם: הוא לא ראה את הבד', 'שהאורגים הציגו לפניו בגאווה.', 'האומנם אני טיפש כזה? חשב בדאגה.', 'אעמיד פנים שראיתי.', 'כדי שהמלך לא יחשוד בו , חזר היועץ ובפיו הלולים וחשבונות', 'העבודה מתקדמת להפליא , מלכי.', 'אילו דוגמאות , אילו צבעים! עין לא ראתה', 'המלך היה מאשר']
+term_M = ['סופסוף הגיע היום הגדול.', 'בראש , מתחת לחופה מיוחדת , צעד המלך – עירום , פרט לכותנתו.', 'אנשי העיר הנרגשים הצטופפו בצידי הדרך.', 'אבל לפתע נשמע קול קטן וצלול מעל רחש ההמון.', 'אבא , אמר הקול בפליאה, המלך לא לובש שום דבר!', 'האב נבוך ניסה להשקיט את ילדו.', 'אל תדבר שטויות , לחש.', 'אבל הילד חזר על דבריו בכל רם.', 'והקהל הצטרף אליו: המלך עירום.', 'מרוב שמחה אין עוד צורך להעמיד פנים.', 'פרץ הקהל כולו בצחוק גדול.']
 
 def main_func(name):
 
@@ -63,34 +76,13 @@ def main_func(name):
     aligned = get_perspective(img, cords)
     # rotate 180 deg the img if needed, and load matrix in order to manipulate image
     aligned_data, aligned = check_opp(aligned)
-    written_ranges, sides, components = curr_func(aligned_data)
-    tree = xml(written_ranges, name, sides, components)
-    # aligned_data = paint_lines(written_ranges, aligned_data)
+    symbol_of_term = recognize_chars(aligned_data)
+    print(symbol_of_term, name)
+    term = from_char_to_term(symbol_of_term)
+    written_ranges, sides, components,words,words_ind = find_lines_words_component(aligned_data, term)
+    tree = xml(written_ranges, name, sides, components,words, words_ind, term)
     aligned = Image.fromarray(aligned_data, 'RGB')
     return aligned, tree
-
-
-def curr_func(data):
-    aligned_data = np.copy(data)
-    # raise the blue channel in the matrix in order to prepare the matrix to binarization.
-    aligned_data = raise_blue(aligned_data)
-    # delete the skeleton between boxes
-    aligned = Image.fromarray(aligned_data, 'RGB')
-    # aligned.show()
-    aligned_data = between_lines(aligned_data)
-    # we need to render the img after all manipulation
-    aligned = Image.fromarray(aligned_data, 'RGB')
-    # grayscale and binarization
-    gray = aligned.convert('L')
-    bw = gray.point(lambda x: 0 if x < 200 else 255, '1')
-    # bw.show()
-    bin_data = np.array(bw)
-    # finding bounds in y axis of each written line of input
-    written_ranges = find_written_rows(bin_data)
-    # now with each range of input we find connected components in order to analyze each component
-    sides, components = connected_components(bin_data, written_ranges)
-    # xml(written_ranges)
-    return written_ranges, sides, components
 
 
 # getting by image name the properties of img
@@ -131,6 +123,7 @@ def save_cords(data):
     # put all the data in the array
     arr = [(j_u_l, i_u_l), (j_u_r, i_u_r), (j_d_r, i_d_r), (j_d_l, i_d_l)]
     return arr
+
 
 
 # its more convenient to look in 2d binary array than in 3d rgb
@@ -269,6 +262,102 @@ def opp(data):
                 return True
         i = i+1
     return False
+
+def recognize_chars(data):
+    count = 0
+    first_black = True
+    for i in range(1700, h):
+        for j in range(400, 1100):
+            if is_black(data[i][j]):
+                if first_black:
+                    x,y = j, i
+                    first_black = False
+                count = count+1
+    if count==0:
+        return 'a'
+    elif count<40:
+        return 'l'
+    elif count<60:
+        return i_or_j(x, y, data)
+    elif count<75:
+        return 'k'
+    elif count<90:
+        return d_or_f(x, y, data)
+    elif count<100:
+        return e_or_b(x, y, data)
+    elif count<140:
+        return 'h'
+    else:
+        return 'm'
+
+
+def i_or_j(x,y, data):
+    min_x = w
+    max_x = 0
+    for m in range(y, h):
+        for n in range(x-10, x+10):
+            if is_black(data[m][n]):
+                if n<min_x:
+                    min_x = n
+                elif n>max_x:
+                    max_x = n
+    identifier = max_x - min_x
+    if identifier>4:
+        return 'j'
+    return 'i'
+
+
+def d_or_f(x,y, data):
+    black_rows = 0
+    for i in range(y, h):
+        count_in_row = 0
+        for j in range(x, x+50):
+            if is_black(data[i][j]):
+                count_in_row = count_in_row+1
+        if count_in_row>8:
+            black_rows = black_rows+1
+    if black_rows>4:
+        return 'f'
+    return 'd'
+
+
+def e_or_b(x,y,data):
+    black_rows = 0
+    for i in range(y, h):
+        count_in_row = 0
+        for j in range(x, x+50):
+            if is_black(data[i][j]):
+                count_in_row = count_in_row+1
+        if count_in_row>3:
+            black_rows = black_rows+1
+    if black_rows>10:
+        return 'b'
+    return 'e'
+
+def from_char_to_term(char_symbol):
+    switcher = {'a': term_A, 'b': term_B, 'c':term_C, 'd':term_D, 'e':term_E, 'f':term_F, 'g':term_G, 'h':term_H, 'i':term_I,
+                'j':term_J, 'k':term_K, 'l':term_L, 'm':term_M }
+    return switcher.get(char_symbol)
+
+def find_lines_words_component(data, term):
+    aligned_data = np.copy(data)
+    # raise the blue channel in the matrix in order to prepare the matrix to binarization.
+    aligned_data = raise_blue(aligned_data)
+    # delete the skeleton between boxes
+    aligned_data = between_lines(aligned_data)
+    # we need to render the img after all manipulation
+    aligned = Image.fromarray(aligned_data, 'RGB')
+    # grayscale and binarization
+    gray = aligned.convert('L')
+    bw = gray.point(lambda x: 0 if x < 200 else 255, '1')
+    bin_data = np.array(bw)
+    # finding bounds in y axis of each written line of input
+    written_ranges = find_written_rows(bin_data)
+    # now with each range of input we find connected components in order to analyze each component
+    sides, components = connected_components(bin_data, written_ranges)
+    # detecting word by largest distances between components in x axis
+    words, words_ind = find_words(components, term)
+    return written_ranges, sides, components, words, words_ind
 
 
 # running over all img, and raising the blue channel in each i,j: in order to "ignore" yellow lines
@@ -414,6 +503,7 @@ def find_connected_components(row, bin_data):
                                 if not bin_data[i][m]:
                                     if not visited_pixel(i,m,visited):
                                         n_visites, zrs = dfs(i, m, bin_data, zrs, [[i, m]], count_comp, row[0])
+                                        # enough pixels to determine component
                                         if len(n_visites) > 2:
                                             connected_components_in_curr_row.append([[find_max_j(n_visites, m),
                                                                                       find_min_j(n_visites, j)],
@@ -454,20 +544,23 @@ def visited_pixel(i, j, visited):
     return False
 
 
+# most left coord
 def find_min_j(visited, min_j):
     for pix in visited:
         if min_j > pix[1]:
             min_j = pix[1]
-    return min_j
+    return min_j - PADD
 
 
+# most right coord
 def find_max_j(visited, max_j):
     for pix in visited:
         if max_j < pix[1]:
             max_j = pix[1]
-    return max_j
+    return max_j + PADD
 
 
+# highest and lowest
 def find_min_max_i(visited, min_i, max_i):
     for pix in visited:
         if min_i > pix[0]:
@@ -477,30 +570,182 @@ def find_min_max_i(visited, min_i, max_i):
     return [min_i, max_i]
 
 
-def xml(rows, name, sides, components):
-    root = ET.Element("PcGts")
+def find_words(components, term):
+    spaces = []
+    words = []
+    words_inds = []
+    for i in range(2, min(len(components), 13)):
+        curr_line = components[i]
+        # the first component from right, for saving half of memory acsess
+        cur_comp = curr_line[0]
+        curr_spaces = []
+        for j in range(len(components[i])-1):
+            curr_c_x = cur_comp[0]
+            curr_end = curr_c_x[1]
+            next_comp = curr_line[j+1]
+            next_c_x = next_comp[0]
+            next_start = next_c_x[0]
+            curr_space = curr_end-next_start
+            curr_spaces.append(curr_space)
+            cur_comp = next_comp
+        space_rec = find_larger_spaces(curr_spaces, i, term)
+        spaces.append(space_rec)
+        words_ind = spaces_to_words(space_rec, len(components[i])-1)
+        words_curr = []
+        for word in words_ind:
+            first = word[0]
+            last = word[1]
+            start_j = components[i][first][0][0]
+            end_j = components[i][last][0][1]
+            highest = h
+            lowest = 0
+            for x in range(first, last+1):
+                comp_high = components[i][x][1][0]
+                comp_low = components[i][x][1][1]
+                if comp_high< highest:
+                    highest = comp_high
+                if comp_low > lowest:
+                    lowest = comp_low
+            words_curr.append([[start_j, end_j],[highest, lowest]])
+        words.append(words_curr)
+        words_inds.append(words_ind)
+    return words,words_inds
+
+
+def spaces_to_words(space_rec, last_comp):
+    words = []
+    first = 0
+    for bound in space_rec:
+        words.append([first, bound])
+        first = bound+1
+    words.append([first, last_comp])
+    return words
+
+
+# largest distances between components are probably spaces
+def find_larger_spaces(spaces, i, term):
+    num_of_spaces = term[i-2].count(" ")
+    max_indexes = []
+    for s in range(num_of_spaces):
+        max_space = max(spaces)
+        ind = spaces.index(max_space)
+        spaces[ind] = 0
+        max_indexes.append(ind)
+
+    max_indexes.sort()
+    return max_indexes
+
+
+def str_coords(left, right, up, down):
+    r_num = int(right)
+    if r_num>=w:
+        r_num = w-1
+        right = str(r_num)
+    ret = pair_str(left,up)+" "+pair_str(left, down)+" "+pair_str(right, down)+" "+pair_str(right,up)
+    return ret
+
+
+def pair_str(x,y):
+    return x+","+y
+
+
+def xml(rows, name, sides, components, words, words_ind, term):
+
+    root = ET.Element("PcGts" )
+    root.set("xsi:schemaLocation", "http://schema.primaresearch.org/PAGE/gts/pagecontent/2018-07-15 http://schema.primaresearch.org/PAGE/gts/pagecontent/2018-07-15/pagecontent.xsd")
+    root.set("xmlns","http://schema.primaresearch.org/PAGE/gts/pagecontent/2018-07-15")
+    root.set("xmlns:xsi","http://www.w3.org/2001/XMLSchema-instance")
     metadata = ET.SubElement(root, "Metadata")
     ET.SubElement(metadata, "Creator").text = "Coral Burg"
-    ET.SubElement(metadata, "Created").text = str(datetime.datetime.now())
-    page = ET.SubElement(root, "Page", imageFilename=name, imageWidth=str(w), imageHeight=str(h),
-                         readingDirection="right-to-left", primaryLanguage="Hebrew")
-    for counter_lines in range(0,len(rows)):
-        txt_reg = ET.SubElement(page, "TextLine", id="r"+str(counter_lines), type="textline")
+    curr_date = str(datetime.datetime.now())
+    [date1, date2] = curr_date.split()
+    [hours, mili] = date2.split('.')
+    curr_date = date1+"T"+hours
+    ET.SubElement(metadata, "Created").text = curr_date
+    ET.SubElement(metadata, "LastChange").text = curr_date
+    page = ET.SubElement(root, "Page")
+    page.set("imageFilename",name)
+    page.set("imageWidth", str(w))
+    page.set("imageHeight", str(h))
+    page.set("readingDirection","right-to-left")
+    page.set("primaryLanguage", "Hebrew")
+    reg = ET.SubElement(page, "TextRegion", primaryLanguage="Hebrew", readingDirection="right-to-left", primaryScript="Hebr - Hebrew",
+                        type= "paragraph", id = "r"+str(0))
+    count_component =0
+    count_word = 0
+    ET.SubElement(reg, "Coords", points=str_coords(str(1),str(w-1), str(1), str(h-5)))
+    # possibly more than 13 lines - wrong input
+    if len(rows)<13:
+        row_len = len(rows)
+    else:
+        row_len = 13
+
+    for counter_lines in range(row_len):
+        txt_line = ET.SubElement(reg, "TextLine", id="l"+str(counter_lines), primaryLanguage="Hebrew"
+                                 , readingDirection="right-to-left")
         up, down = str(rows[counter_lines][0]), str(rows[counter_lines][1])
         right, left = str(sides[counter_lines][0]), str(sides[counter_lines][1])
-        ET.SubElement(txt_reg, "Coords", mostRight=right, mostLeft=left, highest=up, lowest=down)
-        txt_eq = ET.SubElement(txt_reg, "TextEquiv")
-        ET.SubElement(txt_eq, "Unicode").text = "The PAGE format for a textline"
-        for count_components in range(0, len(components[counter_lines])):
-            component = ET.SubElement(txt_reg, "Component", id="c"+str(count_components), type="component")
-            curr_comp = components[counter_lines][count_components]
-            up_c, down_c = str(curr_comp[1][0]), str(curr_comp[1][1])
-            right_c,left_c = str(curr_comp[0][0]), str(curr_comp[0][1])
-            ET.SubElement(component, "Coords", mostRight=right_c, mostLeft=left_c, highest=up_c, lowest=down_c)
+        ET.SubElement(txt_line, "Coords", points = str_coords(left, right, up, down))
+        sen = term[counter_lines-2]
+        #   the first and second lines are spacial case, handled next
+        if 2<=counter_lines<=13:
+            line = counter_lines-2
+            arr_of_words = sen.split(' ')
+            equal_num = len(arr_of_words)==len(words[line])
+            for i in range(len(words[line])):
+                word = ET.SubElement(txt_line, "Word", id = "w"+str(count_word))
+                count_word = count_word+1
+                curr_word = words[line][i]
+                up_w, down_w = str(curr_word[1][0]), str(curr_word[1][1])
+                right_w, left_w = str(curr_word[0][0]), str(curr_word[0][1])
+                indxs = words_ind[line][i]
+                start = indxs[0]
+                end = indxs[1]
+                ET.SubElement(word, "Coords", points=str_coords(left_w, right_w, up_w, down_w))
+
+                for count_components in range(start, end+1):
+                    component = ET.SubElement(word, "Glyph", id="c"+str(count_component))
+                    count_component = count_component+1
+                    curr_comp = components[counter_lines][count_components]
+                    up_c, down_c = str(curr_comp[1][0]), str(curr_comp[1][1])
+                    right_c,left_c = str(curr_comp[0][0]), str(curr_comp[0][1])
+                    ET.SubElement(component, "Coords", points=str_coords(left_c, right_c, up_c, down_c))
+                    comp_eq = ET.SubElement(component, "TextEquiv")
+                    ET.SubElement(comp_eq, "Unicode")
+                if equal_num:
+                    txt_eq_w = ET.SubElement(word, "TextEquiv")
+                    printed_word = arr_of_words[i]
+                    ET.SubElement(txt_eq_w, "Unicode").text = printed_word
+            txt_eq = ET.SubElement(txt_line, "TextEquiv")
+            ET.SubElement(txt_eq, "Unicode").text = sen
+        #   two firsts lines are only components but a word was needed for format - spacial case
+        else:
+            word_line = ET.SubElement(txt_line, "Word", id="w" + str(count_word))
+            count_word = count_word+1
+            ET.SubElement(word_line, "Coords", points=str_coords(left, right, up, down))
+            for count_components in range(len(components[counter_lines])):
+                component = ET.SubElement(word_line, "Glyph", id="c" + str(count_component))
+                count_component = count_component+1
+                curr_comp = components[counter_lines][count_components]
+                up_c, down_c = str(curr_comp[1][0]), str(curr_comp[1][1])
+                right_c, left_c = str(curr_comp[0][0]), str(curr_comp[0][1])
+                ET.SubElement(component, "Coords", points=str_coords(left_c, right_c, up_c, down_c))
+                comp_eq = ET.SubElement(component, "TextEquiv")
+                ET.SubElement(comp_eq, "Unicode")
+            text_word = ET.SubElement(word_line, "TextEquiv")
+            ET.SubElement(text_word, "Unicode")
+            line_eq = ET.SubElement(txt_line, "TextEquiv")
+            ET.SubElement(line_eq, "Unicode")
+
+    text_reg = ET.SubElement(reg, "TextEquiv")
+    ET.SubElement(text_reg, "Unicode")
     tree = ET.ElementTree(root)
     return tree
 
 
+#   each image in current directory manipulated by the main function that has a side effect:
+#   create a new directory in the current one that contains 2 directories: input and output. the input contains
+#   the aligned images, and the output contains the xml files for each image by the format with all data that we need.
 def main():
     os.mkdir("input_output")
     curr_dir = os.getcwd()
@@ -516,7 +761,7 @@ def main():
             inputs.save(file)
             os.chdir(new_dir+"/output")
             str_name = file[:-3]
-            output.write(str_name + "xml")
+            output.write(str_name + "xml",  encoding="UTF-8", xml_declaration=True)
             os.chdir(curr_dir)
 
 
